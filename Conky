@@ -37,10 +37,24 @@ ${goto 40}$color2${top_mem name 3}$alignr$color${top_mem mem_res 3}
 ${goto 40}$color2${top_mem name 4}$alignr$color${top_mem mem_res 4}
 # ${goto 40}$color2${top_mem name 5}$alignr$color${top_mem mem_res 5}
 #
-${voffset 10}${goto 40}${color}Swap${font Bitstream Vera Sans:bold:size=8}$alignr${swap}/ ${swapfree}
+
+${voffset 10}${goto 40}${color}GPU: ${color}${exec nvidia-smi --query-gpu=gpu_name --format=csv,noheader,nounits | head -1} $color
+${goto 40}${color2}GPU Temperature${color} $alignr${execi 60 nvidia-settings -query [gpu:0]/GPUCoreTemp -t } °C
+${goto 40}${color2}GPU Utilization${color}$alignr${exec nvidia-smi | grep % | cut -c 61-63 | head -1} %
+${goto 40}${color2}VRAM Utilization${color}$alignr${exec nvidia-smi | grep % | cut -c 37-40 | head -1} MB
+${goto 40}${color2}GPU Power Draw${color}$alignr${exec nvidia-smi | grep % | cut -c 21-23 | head -1} W
+
+${voffset 10}${goto 40}${color}GPU: ${color}${exec nvidia-smi --query-gpu=gpu_name --format=csv,noheader,nounits | awk 'NR==2'} $color
+${goto 40}${color2}GPU Temperature${color} $alignr${execi 60 nvidia-settings -query [gpu:1]/GPUCoreTemp -t } °C
+${goto 40}${color2}GPU Utilization${color}$alignr${exec nvidia-smi | grep % | cut -c 61-63 | awk 'NR==2'} %
+${goto 40}${color2}VRAM Utilization${color}$alignr${exec nvidia-smi | grep % | cut -c 37-40 | awk 'NR==2'} MB
+${goto 40}${color2}GPU Power Draw${color}$alignr${exec nvidia-smi | grep % | cut -c 21-23 | awk 'NR==2'} W
+
+#${voffset 10}${goto 40}${color}Swap${font Bitstream Vera Sans:bold:size=8}$alignr${swap}/ ${swapfree}
 ${voffset 15}$font$alignr${execi 10000 awk -F= '/TION/ {print $2}' /etc/lsb-release |sed 's/"//g'} \
 ${execi 10000 awk -F= '/EASE=/ {printf $2" "} /NAME/ {print $2}' /etc/lsb-release}
 ${voffset 10}${color2}${alignr}${execi 1200 whoami}@${nodename}
 ${alignr}${color2}${font Bitstream Vera Sans:size=8}uptime: ${color}${uptime_short}
 ${voffset 5}${color2}${font Bitstream Vera Sans:size=8}${alignr}kernel: ${color}${kernel}
 ]]
+
